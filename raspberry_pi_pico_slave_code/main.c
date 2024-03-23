@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include <Wire.h>
+#include <Arduino.h>
 
 #define ESC_PIN1  18
 #define ESC_PIN2  19
@@ -101,20 +102,21 @@ void arm_thrusters() {
 
 void receiveMessage(int bytes)
 {
-  static uint16_t currentValue = 0; // Temporary storage for the current value being constructed
-  static int i = 0;
+  Wire.write();
 
-  whle(Wire.available())
+  for(int i=0; i<16; i++)
   {
-    currentValue = (Wire.read() << 8);
-    currentValue |= Wire.read();
-    PWM_values[i] = currentValue;
-    i++;
+    int msb = Wire.read();
+    int lsb = Wire.read();
+
+    PWM_values[i] = (msb << 8);
+    PWM_values[i] |= lsb;
+
   }
 
   drive_thrusters(PWM_values[0], PWM_values[1], PWM_values[2], PWM_values[3], PWM_values[4], PWM_values[5], PWM_values[6], PWM_values[7]);
     
-
+  // Print the values for debugging
   Serial.print("PWM values: ");
   for (int j = 0; j < 8; j++) {
     Serial.print(PWM_values[j]);
