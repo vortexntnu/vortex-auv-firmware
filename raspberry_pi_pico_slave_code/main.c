@@ -1,6 +1,5 @@
 #include <Servo.h>
 #include <Wire.h>
-#include <Arduino.h>
 
 #define ESC_PIN1  18
 #define ESC_PIN2  19
@@ -102,37 +101,24 @@ void arm_thrusters() {
 
 void receiveMessage(int bytes)
 {
-  static int i = 0; // Keep track of the array index
   static uint16_t currentValue = 0; // Temporary storage for the current value being constructed
-  
-  while(Wire.available()) // Loop through all received bytes
+  static int i = 0;
+
+  whle(Wire.available())
   {
-    if(IS_HIGH_BYTE)
-    {
-      int msb = Wire.read(); // Read MSB
-      currentValue = msb << 8; // Shift MSB
-      IS_HIGH_BYTE = false;
-    }
-    else
-    {
-      int lsb = Wire.read(); // Read LSB
-      currentValue |= lsb; // Merge LSB with MSB
-      PWM_values[i] = currentValue; // Store the reconstructed value
-      IS_HIGH_BYTE = true;
-      i++; // Move to the next index
-    }
+    currentValue = (Wire.read() << 8);
+    currentValue |= Wire.read();
+    PWM_values[i] = currentValue;
+    i++;
   }
 
-  if(i >= 8) // If all values are received
-  {
-    i = 0; // Reset index for the next set of data
-    drive_thrusters(PWM_values[0], PWM_values[1], PWM_values[2], PWM_values[3], PWM_values[4], PWM_values[5], PWM_values[6], PWM_values[7]);
-    // Print the values for debugging
-    Serial.print("PWM values: ");
-    for (int j = 0; j < 8; j++) {
-      Serial.print(PWM_values[j]);
-      Serial.print(" ");
-    }
-    Serial.println();
+  drive_thrusters(PWM_values[0], PWM_values[1], PWM_values[2], PWM_values[3], PWM_values[4], PWM_values[5], PWM_values[6], PWM_values[7]);
+    
+
+  Serial.print("PWM values: ");
+  for (int j = 0; j < 8; j++) {
+    Serial.print(PWM_values[j]);
+    Serial.print(" ");
   }
+  Serial.println();
 }
