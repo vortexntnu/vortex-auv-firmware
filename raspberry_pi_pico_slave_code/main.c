@@ -57,7 +57,6 @@ void setup() {
   Serial.println("Setting up I2C communication...");
   Wire.begin(I2C_ADDRESS);
   Wire.onReceive(receiveMessage);
-  //Wire.onRequest(sendMessage);
 
   pinMode(6, INPUT_PULLUP);
   pinMode(7, INPUT_PULLUP);
@@ -67,9 +66,9 @@ void setup() {
   for(int i=0; i < 5; i++)
   {
     digitalWrite(25, HIGH);
-    delay(256);
+    delay(254);
     digitalWrite(25, LOW);
-    delay(250);
+    delay(254);
   }
 }
 
@@ -102,18 +101,22 @@ void arm_thrusters() {
 
 void receiveMessage(int bytes)
 {
-  Wire.write();
+  // Read and throw away the first byte as it is always 0
+  Wire.read();
 
-  for(int i=0; i<16; i++)
+  // Read all the PWM signals and sort them out
+  // Since 1 PWM signal is 16 bytes we send it through 2 bytes, and we have 8 PWM
+  // 16 messages in total sent
+  for(int i=0; i<8; i++)
   {
     int msb = Wire.read();
     int lsb = Wire.read();
 
     PWM_values[i] = (msb << 8);
     PWM_values[i] |= lsb;
-
   }
 
+  // Drive thrusters
   drive_thrusters(PWM_values[0], PWM_values[1], PWM_values[2], PWM_values[3], PWM_values[4], PWM_values[5], PWM_values[6], PWM_values[7]);
     
   // Print the values for debugging
