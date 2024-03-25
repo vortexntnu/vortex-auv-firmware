@@ -11,6 +11,8 @@
 #define ESC_PIN7  27
 #define ESC_PIN8  28
 
+#define LED_PIN 25
+
 #define ARMING_PWM    1500
 #define STARTUP_DELAY 1500
 #define I2C_ADDRESS   0x21
@@ -36,6 +38,18 @@ void receiveMessage(int bytes);
 
 
 void setup() {
+  // Blink
+  pinMode(LED_PIN, OUTPUT);
+
+  for(int i=0; i < 5; i++)
+  {
+    digitalWrite(LED_PIN, HIGH);
+    delay(254);
+    digitalWrite(LED_PIN, LOW);
+    delay(254);
+  }
+
+  // Start
   Serial.begin(115200);
 
   delay(5000);
@@ -61,15 +75,8 @@ void setup() {
   pinMode(6, INPUT_PULLUP);
   pinMode(7, INPUT_PULLUP);
 
-  pinMode(25, OUTPUT);
-
-  for(int i=0; i < 5; i++)
-  {
-    digitalWrite(25, HIGH);
-    delay(254);
-    digitalWrite(25, LOW);
-    delay(254);
-  }
+  // Set LED to always HIGH for debuging clarity
+  digitalWrite(LED_PIN, HIGH);
 }
 
 void loop() {
@@ -125,5 +132,6 @@ void receiveMessage(int bytes)
     Serial.print(PWM_values[j]);
     Serial.print(" ");
   }
+
   Serial.println();
 }
