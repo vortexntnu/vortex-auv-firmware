@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <avr/wdt.h>
 
 #define REL_XAVI  2
 #define REL_2STAT 3
@@ -13,67 +14,77 @@
 #define PDB_VLM   A5
 
 void setup() {
+  // Set up control pins as outputs
+  wdt_disable();
+  
+  pinMode(REL_XAVI, OUTPUT);
+  pinMode(REL_2STAT, OUTPUT);
+  pinMode(REL_1STAT, OUTPUT);
+  pinMode(REL_FS, OUTPUT);
+  pinMode(REL_PDB, OUTPUT);
 
-  for(uint8_t i = 4; (i < 10 && (i != 6 || i != 5)); i++) {
-    pinMode(i, OUTPUT);
-  }
+  // Set up sensor pins as inputs
   pinMode(XAVI_VLM, INPUT);
   pinMode(ESC2_VLM, INPUT);
   pinMode(ESC1_VLM, INPUT);
   pinMode(PDB_VLM, INPUT);
+  
+  wdt_enable(WDTO_2S);
 }
+
 
 void loop() {
-  float ESC1_VLM = analogRead(ESC1_VLM);
-  float ESC2_VLM = analogRead(ESC2_VLM);
+  int esc1Value = analogRead(ESC1_VLM);
+  int esc2Value = analogRead(ESC2_VLM);
+  int xaviValue = analogRead(XAVI_VLM);
+  int pdbValue = analogRead(PDB_VLM);
 
-  ESC1_VLM = map(ESC1_VLM, 0, 1023, 0, 5);
-  ESC2_VLM = map(ESC2_VLM, 0, 1023, 0, 5);
+  float esc1Voltage = mapVoltage(esc1Value);
+  float esc2Voltage = mapVoltage(esc2Value);
+  float xaviVoltage = mapVoltage(xaviValue);
+  float pdbVoltage = mapVoltage(pdbValue);
 
-  float XAVI_VLM = analogRead(XAVI_VLM);
-  float PDB_VLM = analogRead(PDB_VLM);
+  int fState = digitalRead(CTRL);
+  digitalWrite(REL_FS, fState ? LOW : HIGH);
 
-  int F_STATE = digitalRead(CTRL);
+  checkVoltage(xaviVoltage, REL_XAVI);
+  checkVoltage(pdbVoltage, REL_PDB);
+  checkVoltageESC(esc1Voltage, REL_2STAT);
+  checkVoltageESC(esc2Voltage, REL_1STAT);
 
-  XAVI_VLM = map(XAVI_VLM, 0, 1023, 0, 5);
-  PDB_VLM = map(PDB_VLM, 0, 1023, 0, 5);
-
-  if(F_STATE) {
-    digitalWrite(REL_FS, LOW);
-  } else {
-    digitalWrite(REL_FS, HIGH);
-  }
-
-  check_voltage(XAVI_VLM, REL_XAVI);
-  check_voltage(PDB_VLM, REL_PDB);
-  check_voltage_ESC(ESC1_VLM, REL_2STAT);
-  check_voltage_ESC(ESC2_VLM, REL_1STAT);
-  watchdog();
+  wdt_reset();
 }
 
-
-void check_voltage(float voltage, uint8_t pin) {
-  if(voltage >= 4.75) {
-    digitalWrite(pin, HIGH);
-  } else {
-    digitalWrite(pin, LOW);
-  }
+float mapVoltage(int analogValue) {
+  return (analogValue * 5.0) / 1023.0;
 }
 
-void check_voltage_ESC(float voltage, uint8_t pin) {
-  if(voltage >= 2.4) {
-    digitalWrite(pin, HIGH);
-  } else {
-    digitalWrite(pin, LOW);
-  }
+void checkVoltage(float voltage, uint8_t pin) {
+  digitalWrite(pin, voltage >= 4.75 ? HIGH : LOW);
 }
 
+void checkVoltageESC(float voltage, uint8_t pin) {
+  digitalWrite(pin, voltage >= 2.4 ? HIGH : LOW);
+}
+
+/*
 void watchdog() {
-  static uint32_t last_millis = 0;
-  if(millis() - last_millis > 1000) {
-    last_millis = millis();
-    for(uint8_t i = 0; i < 5; i++) {
-      analogRead(i);
-    }
+  static uint32_t lastMillis = 0;
+  if (millis() - lastMillis > 1000) {
+    // Reset the watchdog timer
+    lastMillis = millis();
+
+    // Potentially reset the system or signal an error
+    reset system();
   }
 }
+
+void resetSystem() {
+  // Enable Watchdog Timer with a very short timeout
+  wdt_enable(WDTO_15MS);
+
+  // Enter an infinite loop to cause the watchdog to reset the system
+  while (true) {}
+}
+*/
+
