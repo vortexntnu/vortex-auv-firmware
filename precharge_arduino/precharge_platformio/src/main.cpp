@@ -12,9 +12,9 @@
 #define RELAY_PDB                      9
 
 // Voltage thresholds
-#define XAVIER_THRESHOLD               4.75
-#define THRUSTER_THRESHOLD             2.4
-#define PDB_THRESHOLD                  4.75
+#define XAVIER_THRESHOLD               4.75 // Voltage
+#define THRUSTER_THRESHOLD             2.4  // Voltage
+#define PDB_THRESHOLD                  4.75 // Voltage
 
 // Voltage measurement pins
 #define VOLTAGE_XAVIER                 A2
@@ -68,8 +68,8 @@ void loop() {
     controlRelay(thruster12Voltage, THRUSTER_THRESHOLD, RELAY_THRUSTERS_1_AND_2);
     controlRelay(pdbVoltage, PDB_THRESHOLD, RELAY_PDB);
 
-    // Add a small delay to avoid rapid toggling
-    delay(100);
+    // A small delay to avoid rapid toggling
+    delayMicroseconds(100);
 }
 // Main Loop (STOP) ==================================================
 
