@@ -12,9 +12,9 @@
 #define RELAY_PDB                      9
 
 // Voltage thresholds
-#define XAVIER_THRESHOLD               4.75 // Voltage
-#define THRUSTER_THRESHOLD             2.4  // Voltage
-#define PDB_THRESHOLD                  4.75 // Voltage
+#define XAVIER_THRESHOLD               4.75 // Volt
+#define THRUSTER_THRESHOLD             2.4  // Volt
+#define PDB_THRESHOLD                  4.75 // Volt
 
 // Voltage measurement pins
 #define VOLTAGE_XAVIER                 A2
