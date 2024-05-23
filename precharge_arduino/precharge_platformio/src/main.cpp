@@ -1,90 +1,86 @@
 #include <Arduino.h>
-#include <avr/wdt.h>
+#include "dataReading.hpp"
 
-#define REL_XAVI  2
-#define REL_2STAT 3
-#define REL_1STAT 4
-#define CTRL      7
-#define REL_FS    8
-#define REL_PDB   9
 
-#define XAVI_VLM  A2
-#define ESC2_VLM  A3
-#define ESC1_VLM  A4
-#define PDB_VLM   A5
 
+// Definitions and Global Variables (START) ==================================================
+// Define relay output pins
+#define RELAY_XAVIER                   2
+#define RELAY_THRUSTERS_3_AND_4        3
+#define RELAY_THRUSTERS_1_AND_2        4
+#define RELAY_FAILSAFE                 8
+#define RELAY_PDB                      9
+
+// Voltage thresholds
+#define XAVIER_THRESHOLD               4.75
+#define THRUSTER_THRESHOLD             2.4
+#define PDB_THRESHOLD                  4.75
+
+// Voltage measurement pins
+#define VOLTAGE_XAVIER                 A2
+#define VOLTAGE_THRUSTER_3_AND_4       A3
+#define VOLTAGE_THRUSTER_1_AND_2       A4
+#define VOLTAGE_PDB                    A5
+
+// Create instances of DataReading for each pin
+DataReading xavier(VOLTAGE_XAVIER);
+DataReading thruster34(VOLTAGE_THRUSTER_3_AND_4);
+DataReading thruster12(VOLTAGE_THRUSTER_1_AND_2);
+DataReading pdb(VOLTAGE_PDB);
+
+// Create Functions for use later
+void controlRelay(float voltage, float thresholdVoltage, uint8_t relayPin);
+// Definitions and Global Variables (STOP) ==================================================
+
+
+
+// Setup (START) ==================================================
 void setup() {
-  // Set up control pins as outputs
-  wdt_disable();
-  
-  pinMode(REL_XAVI, OUTPUT);
-  pinMode(REL_2STAT, OUTPUT);
-  pinMode(REL_1STAT, OUTPUT);
-  pinMode(REL_FS, OUTPUT);
-  pinMode(REL_PDB, OUTPUT);
+    // Set up relay pins as outputs
+    pinMode(RELAY_XAVIER, OUTPUT);
+    pinMode(RELAY_THRUSTERS_3_AND_4, OUTPUT);
+    pinMode(RELAY_THRUSTERS_1_AND_2, OUTPUT);
+    pinMode(RELAY_FAILSAFE, OUTPUT);
+    pinMode(RELAY_PDB, OUTPUT);
 
-  // Set up sensor pins as inputs
-  pinMode(XAVI_VLM, INPUT);
-  pinMode(ESC2_VLM, INPUT);
-  pinMode(ESC1_VLM, INPUT);
-  pinMode(PDB_VLM, INPUT);
-  
-  wdt_enable(WDTO_2S);
+    // Initialize all relays to off
+    digitalWrite(RELAY_XAVIER, LOW);
+    digitalWrite(RELAY_THRUSTERS_3_AND_4, LOW);
+    digitalWrite(RELAY_THRUSTERS_1_AND_2, LOW);
+    digitalWrite(RELAY_FAILSAFE, LOW);
+    digitalWrite(RELAY_PDB, LOW);
 }
+// Setup (STOP) ==================================================
 
 
+
+// Main Loop (START) ==================================================
 void loop() {
-  int esc1Value = analogRead(ESC1_VLM);
-  int esc2Value = analogRead(ESC2_VLM);
-  int xaviValue = analogRead(XAVI_VLM);
-  int pdbValue = analogRead(PDB_VLM);
+    // Get filtered voltages
+    float xavierVoltage = xavier.getFilteredVoltage();
+    float thruster34Voltage = thruster34.getFilteredVoltage();
+    float thruster12Voltage = thruster12.getFilteredVoltage();
+    float pdbVoltage = pdb.getFilteredVoltage();
 
-  float esc1Voltage = mapVoltage(esc1Value);
-  float esc2Voltage = mapVoltage(esc2Value);
-  float xaviVoltage = mapVoltage(xaviValue);
-  float pdbVoltage = mapVoltage(pdbValue);
+    // Check and control relays based on voltage readings
+    controlRelay(xavierVoltage, XAVIER_THRESHOLD, RELAY_XAVIER);
+    controlRelay(thruster34Voltage, THRUSTER_THRESHOLD, RELAY_THRUSTERS_3_AND_4);
+    controlRelay(thruster12Voltage, THRUSTER_THRESHOLD, RELAY_THRUSTERS_1_AND_2);
+    controlRelay(pdbVoltage, PDB_THRESHOLD, RELAY_PDB);
 
-  int fState = digitalRead(CTRL);
-  digitalWrite(REL_FS, fState ? LOW : HIGH);
-
-  checkVoltage(xaviVoltage, REL_XAVI);
-  checkVoltage(pdbVoltage, REL_PDB);
-  checkVoltageESC(esc1Voltage, REL_2STAT);
-  checkVoltageESC(esc2Voltage, REL_1STAT);
-
-  wdt_reset();
+    // Add a small delay to avoid rapid toggling
+    delay(100);
 }
+// Main Loop (STOP) ==================================================
 
-float mapVoltage(int analogValue) {
-  return (analogValue * 5.0) / 1023.0;
+
+
+// Functions (START) ==================================================
+void controlRelay(float voltage, float thresholdVoltage, uint8_t relayPin) {
+    if (voltage >= thresholdVoltage) {
+        digitalWrite(relayPin, HIGH);
+    } else {
+        digitalWrite(relayPin, LOW);
+    }
 }
-
-void checkVoltage(float voltage, uint8_t pin) {
-  digitalWrite(pin, voltage >= 4.75 ? HIGH : LOW);
-}
-
-void checkVoltageESC(float voltage, uint8_t pin) {
-  digitalWrite(pin, voltage >= 2.4 ? HIGH : LOW);
-}
-
-/*
-void watchdog() {
-  static uint32_t lastMillis = 0;
-  if (millis() - lastMillis > 1000) {
-    // Reset the watchdog timer
-    lastMillis = millis();
-
-    // Potentially reset the system or signal an error
-    reset system();
-  }
-}
-
-void resetSystem() {
-  // Enable Watchdog Timer with a very short timeout
-  wdt_enable(WDTO_15MS);
-
-  // Enter an infinite loop to cause the watchdog to reset the system
-  while (true) {}
-}
-*/
-
+// Functions (STOP) ==================================================
