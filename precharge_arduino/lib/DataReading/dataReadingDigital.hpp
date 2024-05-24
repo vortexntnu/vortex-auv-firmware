@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define NUM_SAMPLES 50 // The bigger the number, less prone to noise, but longer
+#define NUM_SAMPLES 100 // The bigger the number, less prone to noise, but longer
 
 class DataReadingDigital {
 private:
