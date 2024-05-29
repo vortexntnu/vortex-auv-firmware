@@ -6,11 +6,11 @@
 
 // Definitions and Global Variables (START) ==================================================
 // Voltage thresholds
-#define THRESHOLD_XAVIER               4.75 // Recommended: 4.75 [V]  When Precharge hits 12.0 [V]
-#define THRESHOLD_PDB                  2.7  // Recommended: 2.7  [V]  When Precharge hits 14.8 [V] (We have a bit lower because we don't want to shut down PDB at the same time as Thrustres as PDB Provides power to communication, even if thrusters shut down we still want a bit of safety margin for camera and information) 
-#define THRESHOLD_FAILSAFE             1    // Recommended: 1    [ON] When Failsafe hits 5.0 [V]
-#define THRESHOLD_THRUSTER_1_AND_2     2.9  // Recommended: 2.9  [V]  When Precharge hits 15.3 [V]
-#define THRESHOLD_THRUSTER_3_AND_4     2.9  // Recommended: 2.9  [V]  When Precharge hits 15.3 [V]
+#define THRESHOLD_XAVIER               4.75 // Recommended: 4.75 [V]   When Precharge hits 12.0 [V]
+#define THRESHOLD_PDB                  2.7  // Recommended: 2.7  [V]   When Precharge hits 14.8 [V] (We have a bit lower because we don't want to shut down PDB at the same time as Thrustres as PDB Provides power to communication, even if thrusters shut down we still want a bit of safety margin for camera and information) 
+#define THRESHOLD_FAILSAFE             0    // Recommended: 0    [OFF] When Failsafe hits 0.0 [V] (Yes we know its suposed to be inverted logic, ie 5.0V [ON], NOT 0.0V [OFF], but the hardware stuff f*** up and the logic got double inverted lol X))
+#define THRESHOLD_THRUSTER_1_AND_2     2.9  // Recommended: 2.9  [V]   When Precharge hits 15.3 [V]
+#define THRESHOLD_THRUSTER_3_AND_4     2.9  // Recommended: 2.9  [V]   When Precharge hits 15.3 [V]
 
 // Voltage measurement pins
 #define VOLTAGE_XAVIER                 A2
