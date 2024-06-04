@@ -17,14 +17,14 @@ To use this code, follow these steps:
 
 In order for the previous steps to work fully, you need to have done the following: 
 #### 1. Installed and configured the Pico SDK:
-1. Make a new directory and cd into it
+1. Make a new directory and cd into it, we will call it pico and have it in home. You can chose another name, another directory, or another path if you wish just make sure to take that into account for the next steps. 
 ```
 mkdir ~/pico
 cd ~/pico
 ```
 2. Clone the master branch for the sdk and have it up to date: 
 ```
-git clone https://github.com/raspberrypi/pico-sdk.git
+git clone -b master https://github.com/raspberrypi/pico-sdk.git
 cd pico-sdk
 git submodule update --init
 ```
@@ -43,3 +43,11 @@ sudo apt update
 sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 ```
 
+If you want to ponder upon some examples of how the SDK is used or implemented for the various API's, you can either read the documentation found at: 
+
+https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-c-sdk.pdf?_gl=1*s1qhsn*_ga*MTg3OTAyOTg0MC4xNzE3NDE5NTI0*_ga_22FD70LWDS*MTcxNzQ5Njc5My4yLjAuMTcxNzQ5Njc5My4wLjAuMA.. 
+
+Or you can read through the examples found at this repo: 
+https://github.com/raspberrypi/pico-examples.git
+
+If you decide to change something that might require a new or different librarby, please make sure to have that library configured as a library to include inside the CMakeLists.txt file. 
