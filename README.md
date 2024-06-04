@@ -15,12 +15,15 @@ To use this code, follow these steps:
 ```
 cd <name_of_directory>
 ```
-Or open the directory in vscode and use the vscode terminal. 
+Or open the directory in vscode and use the vscode terminal.
+
+
 2. run the build.sh file, which will do the following steps automatically:
 * makes a new directory called build
 * cd into that directory
 * runs cmake for configuration
 * runs make for building the code.
+
 to run the build.sh file: 
 ```
 ./build.sh
