@@ -16,7 +16,7 @@ To use this code, follow these steps:
 3. Inside the newly made build directory, you should find a file called psm_rpi_pico.uf2 which can be dragged and dropped into the Raspberry Pi Pico. 
 
 In order for the previous steps to work fully, you need to have done the following: 
-### 1. Installed and configured the Pico SDK:
+#### 1. Installed and configured the Pico SDK:
 1. Make a new directory and cd into it
 ```
 mkdir ~/pico
@@ -28,17 +28,17 @@ git clone https://github.com/raspberrypi/pico-sdk.git
 cd pico-sdk
 git submodule update --init
 ```
-3. Configure the PATH for sdk; you can either do it globaly inside bashrc or you can declare it manually in the terminal everytime before using the sdk. To dec
+3. Configure the PATH for sdk; you can either do it globaly inside bashrc or you can declare it manually in the terminal everytime before using the sdk. To declare it globaly, either do the following on the terminal or simply copy paste everythomg netweem the single quote after echo to the end of .bashrc file and restart the terminal. 
 ```
-echo 'export PICO_SDK_PATH=/home/<replace_with_username>/pico/pico-sdk
+echo 'export PICO_SDK_PATH=/home/<replace_with_username>/pico/pico-sdk'
 source ~/.bashrc
 ```
-### 2. Install cmake alongside the necessary dependencies and the compiler
+#### 2. Install cmake alongside the necessary dependencies and the compiler
 1. Make sure everything is up to date
 ```
 sudo apt update
 ```
-2. Install the compilers and the libraries. This might take a while depending on how fast you pc and the internet is. 
+2. Install the compilers and the libraries. This might take a while depending on how fast are your pc and internet. 
 ```
 sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 ```

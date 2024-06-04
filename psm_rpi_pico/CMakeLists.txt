@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 # Pull in SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(bms_rpi_pico C CXX ASM)
+project(psm_rpi_pico C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -14,12 +14,12 @@ endif()
 # Initialize the SDK
 pico_sdk_init()
 
-add_executable(bms_rpi_pico
+add_executable(psm_rpi_pico
         main.c
         )
 
 # pull in common dependencies
-target_link_libraries(bms_rpi_pico 
+target_link_libraries(psm_rpi_pico 
     pico_stdlib
     pico_i2c_slave
     hardware_i2c 
@@ -27,5 +27,5 @@ target_link_libraries(bms_rpi_pico
     )
 
 # create map/bin/hex file etc.
-pico_add_extra_outputs(bms_rpi_pico)
+pico_add_extra_outputs(psm_rpi_pico)
 
