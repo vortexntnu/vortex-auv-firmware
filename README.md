@@ -8,12 +8,24 @@ Link: https://www.youtube.com/watch?v=APvtNK66shM&ab_channel=ShotokuTech
 
 ## PSM RPI PICO Library
 
-Utilises the official SDK for Raspberry Pi Pico and reads two analog values from the PSM module, convert the analog voltage values to their actually representation for current and voltage, and then send them over I2C to the main Raspberry Pi on the system. The I2C address for the Pico is 0x69. 
+Utilises the official SDK for Raspberry Pi Pico and reads two analog values from the PSM module, converts the analog voltage values to their respective real values for current and voltage, and send them over I2C to the main Raspberry Pi on the system. The I2C address for the Pico is 0x69. 
 
 To use this code, follow these steps:
 1. cd into the directory
-2. run the build.sh file, which will make a new directory called build, cd into that directory, run cmake for configuration, and then make for building the code.
-3. Inside the newly made build directory, you should find a file called psm_rpi_pico.uf2 which can be dragged and dropped into the Raspberry Pi Pico. 
+```
+cd <name_of_directory>
+```
+Or open the directory in vscode and use the vscode terminal. 
+2. run the build.sh file, which will do the following steps automatically:
+* makes a new directory called build
+* cd into that directory
+* runs cmake for configuration
+* runs make for building the code.
+to run the build.sh file: 
+```
+./build.sh
+```
+3. Inside the newly made build directory, you should find a file called psm_rpi_pico.uf2 which can be dragged and dropped into the Raspberry Pi Pico in debug mode. In order to make the pico be in debug mode, hold the DEBUG button on the board before connecting it to the pc and keep it held until after you see the pc recognising the pico and can be accsessed. If this does not work, make sure that you have a cable capable of sending data and not just power.  
 
 In order for the previous steps to work fully, you need to have done the following: 
 #### 1. Installed and configured the Pico SDK:
@@ -33,7 +45,7 @@ git submodule update --init
 echo 'export PICO_SDK_PATH=/home/<replace_with_username>/pico/pico-sdk'
 source ~/.bashrc
 ```
-#### 2. Install cmake alongside the necessary dependencies and the compiler
+#### 2. Installed cmake alongside the necessary dependencies and the compiler
 1. Make sure everything is up to date
 ```
 sudo apt update
