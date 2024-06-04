@@ -9,7 +9,7 @@
 #define CURRENT_SENSE_PIN 28
 
 // I2C configuration
-static const uint I2C_SLAVE_ADDRESS = 0x17;
+static const uint I2C_SLAVE_ADDRESS = 0x69;
 #define SDA_PIN 26
 #define SCL_PIN 27
 
