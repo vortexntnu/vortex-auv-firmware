@@ -6,63 +6,85 @@ For changing I2C pins look at this short video to see how you can easily change 
 Link: https://www.youtube.com/watch?v=APvtNK66shM&ab_channel=ShotokuTech
 
 
-## PSM RPI PICO Library
+# PSM RPI PICO Library
 
-Utilises the official SDK for Raspberry Pi Pico and reads two analog values from the PSM module, converts the analog voltage values to their respective real values for current and voltage, and send them over I2C to the main Raspberry Pi on the system. The I2C address for the Pico is 0x69. 
+This library utilizes the official SDK for the Raspberry Pi Pico to read two analog values from the PSM module. It converts these analog voltage values to their respective real values for current and voltage and sends them over I2C to the main Raspberry Pi in the system. The I2C address for the Pico is `0x69`.
 
-To use this code, follow these steps:
-1. cd into the directory
-```
-cd <name_of_directory>
-```
-Or open the directory in vscode and use the vscode terminal.
+## Prerequisites
 
+Before using this code, ensure you have completed the following:
 
-2. run the build.sh file, which will do the following steps automatically:
-* makes a new directory called build
-* cd into that directory
-* runs cmake for configuration
-* runs make for building the code.
+1. **Installed and configured the Pico SDK:**
+    1. Create a new directory and navigate into it. We'll call it `pico` and place it in the home directory. You can choose another name, directory, or path, but ensure you adjust subsequent steps accordingly:
+        ```bash
+        mkdir ~/pico
+        cd ~/pico
+        ```
+    2. Clone the master branch of the SDK and update submodules:
+        ```bash
+        git clone -b master https://github.com/raspberrypi/pico-sdk.git
+        cd pico-sdk
+        git submodule update --init
+        ```
+    3. Configure the PATH for the SDK. You can either set it globally in `.bashrc` or declare it manually in the terminal before using the SDK. To set it globally, add the following line to `.bashrc` and restart the terminal:
+        ```bash
+        echo 'export PICO_SDK_PATH=/home/<replace_with_username>/pico/pico-sdk' >> ~/.bashrc
+        source ~/.bashrc
+        ```
 
-to run the build.sh file: 
-```
-./build.sh
-```
-3. Inside the newly made build directory, you should find a file called psm_rpi_pico.uf2 which can be dragged and dropped into the Raspberry Pi Pico in debug mode. In order to make the pico be in debug mode, hold the DEBUG button on the board before connecting it to the pc and keep it held until after you see the pc recognising the pico and can be accsessed. If this does not work, make sure that you have a cable capable of sending data and not just power.  
+2. **Installed CMake along with necessary dependencies and the compiler:**
+    1. Ensure your package list is up to date:
+        ```bash
+        sudo apt update
+        ```
+    2. Install the compilers and libraries (this might take some time depending on your PC and internet speed):
+        ```bash
+        sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+        ```
 
-In order for the previous steps to work fully, you need to have done the following: 
-#### 1. Installed and configured the Pico SDK:
-1. Make a new directory and cd into it, we will call it pico and have it in home. You can chose another name, another directory, or another path if you wish just make sure to take that into account for the next steps. 
-```
-mkdir ~/pico
-cd ~/pico
-```
-2. Clone the master branch for the sdk and have it up to date: 
-```
-git clone -b master https://github.com/raspberrypi/pico-sdk.git
-cd pico-sdk
-git submodule update --init
-```
-3. Configure the PATH for sdk; you can either do it globaly inside bashrc or you can declare it manually in the terminal everytime before using the sdk. To declare it globaly, either do the following on the terminal or simply copy paste everythomg netweem the single quote after echo to the end of .bashrc file and restart the terminal. 
-```
-echo 'export PICO_SDK_PATH=/home/<replace_with_username>/pico/pico-sdk'
-source ~/.bashrc
-```
-#### 2. Installed cmake alongside the necessary dependencies and the compiler
-1. Make sure everything is up to date
-```
-sudo apt update
-```
-2. Install the compilers and the libraries. This might take a while depending on how fast are your pc and internet. 
-```
-sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
-```
+## Building the Code
 
-If you want to ponder upon some examples of how the SDK is used or implemented for the various API's, you can either read the documentation found at: 
+To compile and configure the code for your Raspberry Pi Pico, follow these steps:
 
-https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-c-sdk.pdf?_gl=1*s1qhsn*_ga*MTg3OTAyOTg0MC4xNzE3NDE5NTI0*_ga_22FD70LWDS*MTcxNzQ5Njc5My4yLjAuMTcxNzQ5Njc5My4wLjAuMA.. 
+1. Navigate to the project directory:
+    ```bash
+    cd <name_of_directory>
+    ```
+    Alternatively, you can open the directory in VSCode and use the integrated terminal.
 
-Or you can read through the examples found at this repo: 
-https://github.com/raspberrypi/pico-examples.git
+2. Run the `build.sh` script, which automates the following steps:
+    - Creates a new directory called `build`
+    - Navigates into that directory
+    - Runs CMake for configuration
+    - Runs `make` to build the code
 
-If you decide to change something that might require a new or different librarby, please make sure to have that library configured as a library to include inside the CMakeLists.txt file. 
+    To run the `build.sh` file:
+    ```bash
+    ./build.sh
+    ```
+
+3. Inside the newly created `build` directory, you should find a file named `psm_rpi_pico.uf2`. This file can be dragged and dropped onto the Raspberry Pi Pico in debug mode. To enter debug mode:
+    - Hold the BOOTSEL button on the board before connecting it to the PC.
+    - Keep holding the button until the PC recognizes the Pico as an HID (Human Interface Device).
+
+    If this does not work, ensure that you have a data-capable USB cable (not just power).
+
+## Additional Information
+
+### Documentation and Examples
+
+For more details on how the SDK is used or implemented for various APIs, refer to the official documentation:
+
+- [Raspberry Pi Pico C/C++ SDK Documentation](https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-c-sdk.pdf)
+
+You can also explore practical examples provided in the following repository:
+
+- [Raspberry Pi Pico Examples](https://github.com/raspberrypi/pico-examples)
+
+### Modifying the Code
+
+If you decide to make changes that require new or different libraries, ensure to configure the library correctly and include it in the `CMakeLists.txt` file.
+
+---
+
+Feel free to reach out if you encounter any issues or need further assistance!
