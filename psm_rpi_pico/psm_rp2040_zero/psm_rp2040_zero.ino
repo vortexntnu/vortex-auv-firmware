@@ -11,7 +11,7 @@
 #define VOLTAGE_ADC_PIN 28 // PSM Readings
 #define I2C_SDA_PIN 26 // I2C SDA pin (GP4)
 #define I2C_SCL_PIN 27 // I2C SCL pin (GP5)
-#define I2C_ADDRESS 0x21 // I2C address of the slave device for PSM readings
+#define I2C_ADDRESS 0x69 // I2C address of the slave device for PSM readings
 
 int16_t currentData = 0;
 int16_t voltageData = 0;
