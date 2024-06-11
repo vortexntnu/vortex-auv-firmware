@@ -51,8 +51,10 @@ static void i2c_handler(i2c_inst_t *i2c, i2c_slave_event_t event) {
 static void i2c_setup() {
     gpio_init(SDA_PIN);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(SDA_PIN);
     gpio_init(SCL_PIN);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(SCL_PIN);
 
     i2c_init(i2c1, 100000);  // 100 kHz I2C frequency
     i2c_slave_init(i2c1, I2C_SLAVE_ADDRESS, &i2c_handler);
